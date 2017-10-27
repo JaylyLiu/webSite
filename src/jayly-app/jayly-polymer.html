@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="jayly-polymer">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <left-navigation>
+      
+    </left-navigation>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class JaylyPolymer extends Polymer.Element {
+      static get is() { return 'jayly-polymer'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'jayly-polymer'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(JaylyPolymer.is, JaylyPolymer);
+  </script>
+</dom-module>

@@ -1,0 +1,7 @@
+{
+  "name": "jayly",
+  "short_name": "jayly",
+  "description": "This is the jayly&#39;s presonal website&#39; developed with Polymer,CouchDB,Docker.",
+  "start_url": "/",
+  "display": "standalone"
+}
