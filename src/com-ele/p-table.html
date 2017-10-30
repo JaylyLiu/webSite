@@ -1,0 +1,82 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<dom-module id="p-table">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+    </style>
+    <!--
+      app-route provides the name of the category.
+    -->
+    <app-route
+    route="[[route]]"
+    pattern="/:category"
+    data="{{routeData}}"></app-route>
+
+    <h1>[[prop1]]</h1>
+    <table border="1">
+      <thead>
+        <tr>
+          <template is="dom-repeat" items="{{headData}}">
+            <th>{{item}}</th>
+          </template>
+        </tr>
+      </thead>
+      <tbody>
+        <template is="dom-repeat" items="{{bodyData}}">
+          <tr>
+            <template is="dom-repeat" items="{{item}}" as="td">
+              <template is="dom-if" if="{{td.slot}}">
+                <td><slot name="{{td.val}}"></slot></td>
+              </template>
+              <template is="dom-if" if="{{td.normal}}">
+                <td>{{td.val}}</td>
+              </template>
+            </template>
+          </tr>
+        </template>
+
+      </tbody>
+    </table>
+    
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PTable extends Polymer.Element {
+      static get is() { return 'p-table'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'p-table'
+          },
+          route: Object,
+          routeData: Object,
+          headData: {
+            type: Array,
+            value: ['one', 'two', 'three']
+          },
+          bodyData: {
+            type: Array,
+            value: [
+              [{val: 'one', slot: false, normal: true},{val: 'two', slot: false, normal: true},{val: 'three', slot: true, normal: false}],
+              [{val: 'one1', slot: false, normal: true},{val: 'two1', slot: false, normal: true},{val: 'three1', slot: true, normal: false}],
+            ]
+          }
+        };
+      }
+    }
+
+    window.customElements.define(PTable.is, PTable);
+  </script>
+</dom-module>

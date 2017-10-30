@@ -3,22 +3,18 @@
 
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
-<dom-module id="jayly-books">
+<dom-module id="jayly-slot">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
-    <!--
-      app-route provides the name of the category.
-    -->
-    <app-route
-    route="[[route]]"
-    pattern="/:category"
-    data="{{routeData}}"></app-route>
 
     <h1>[[prop1]]</h1>
+    <template is="dom-repeat" items="">
+
+    </template>
     
   </template>
 
@@ -27,20 +23,20 @@
      * @customElement
      * @polymer
      */
-    class JaylyBooks extends Polymer.Element {
-      static get is() { return 'jayly-books'; }
+    class JaylySlot extends Polymer.Element {
+      static get is() { return 'jayly-slot'; }
       static get properties() {
         return {
           prop1: {
             type: String,
-            value: 'jayly-books'
-          },          
+            value: 'jayly-slot'
+          },
           route: Object,
           routeData: Object,
         };
       }
     }
 
-    window.customElements.define(JaylyBooks.is, JaylyBooks);
+    window.customElements.define(JaylySlot.is, JaylySlot);
   </script>
 </dom-module>

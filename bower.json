@@ -4,9 +4,12 @@
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "app-layout": "^2.0.4",
+    "app-layout": "PolymerElements/app-layout#^2.0.4",
     "app-route": "PolymerElements/app-route#^2.0.3",
-    "iron-pages": "^2.0.0"
+    "iron-pages": "^2.0.0",
+    "basic-button": "https://gitlab.com/Sparkpad/PolymerElements/basic-button.git",
+    "vaadin-grid": "https://github.com/vaadin/vaadin-grid.git#^3.0.2",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.1"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

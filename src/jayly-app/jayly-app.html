@@ -1,4 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
 <link rel="import" href="../../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
@@ -8,6 +11,8 @@
 <link rel="import" href="jayly-polymer.html">
 <link rel="import" href="jayly-articles.html">
 <link rel="import" href="jayly-books.html">
+<link rel="import" href="jayly-table.html">
+
 
 
 <dom-module id="jayly-app">
@@ -28,18 +33,21 @@
         tail="{{subroute}}"></app-route>
 
     <app-header role="navigation" id="header" effects="waterfall" condenses reveals>
-      <app-drawer>
-        
-      </app-drawer>
+      <a href="/">home</a>
+      <a href="/polymer">polymer</a>
+      <a href="/articles">articles</a>
+      <a href="/books">books</a>
+      <a href="/table">table</a>
+      
     </app-header>
 
     <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible" >
-      <jayly-home name="home"></jayly-main>
+      <jayly-home name="home"></jayly-home>
       <jayly-polymer name="polymer" route="[[subroute]]"></jayly-polymer>
       <jayly-articles name="articles" route="[[subroute]]"></jayly-articles>
       <jayly-books name="books" route="[[subroute]]"></jayly-books>
+      <jayly-table name="table" route="[[subroute]]"></jayly-table>
     </iron-pages>
-
   </template>
 
   <script>
@@ -62,6 +70,11 @@
           }          
         };
       }
+      ready() {
+        super.ready();
+        // Custom elements polyfill safe way to indicate an element has been upgraded.
+        this.removeAttribute('unresolved');
+      }
 
       static get observers() { return [
         '_routePageChanged(routeData.page)'
@@ -69,24 +82,66 @@
       
       _routePageChanged(page) {
         
-        if (this.page === 'list') {
-          this._listScrollTop = window.pageYOffset;
-        }
+        // if (this.page === 'list') {
+        //   this._listScrollTop = window.pageYOffset;
+        // }
 
         this.page = page || 'home';
 
         // Close the drawer - in case the *route* change came from a link in the drawer.
-        this.drawerOpened = false;
+        // this.drawerOpened = false;
       }
 
-      _pageChanged(page) {
-        // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('jayly-' + page + '.html');
-        Polymer.importHref(
-            resolvedPageUrl,
-            null,
-            this._showPage404.bind(this),
-            true);
+      _pageChanged(page, oldPage) {
+        console.warn(page, oldPage)
+        if (page != null) {
+          // home route is eagerly loaded
+          if (page == 'home') {
+            this._pageLoaded(Boolean(oldPage));
+          // other routes are lazy loaded
+          } else {
+            // When a load failed, it triggered a 404 which means we need to
+            // eagerly load the 404 page definition
+            let cb = this._pageLoaded.bind(this, Boolean(oldPage));
+            Polymer.importHref(
+              this.resolveUrl('jayly-' + page + '.html'),
+             cb, cb, true);
+          }
+        }
+      }
+
+      _pageLoaded(shouldResetLayout) {
+        if (shouldResetLayout) {
+          // The size of the header depends on the page (e.g. on some pages the tabs
+          // do not appear), so reset the header's layout only when switching pages.
+          Polymer.Async.timeOut.run(() => {
+            this.$.header.resetLayout();
+          }, 1);
+        }
+      }
+
+      _notifyNetworkStatus() {
+        let oldOffline = this.offline;
+        this.offline =  !navigator.onLine;
+        // Show the snackbar if the user is offline when starting a new session
+        // or if the network status changed.
+        if (this.offline || (!this.offline && oldOffline === true)) {
+          if (!this._networkSnackbar) {
+            this._networkSnackbar = document.createElement('shop-snackbar');
+            this.root.appendChild(this._networkSnackbar);
+          }
+          this._networkSnackbar.innerHTML = this.offline ?
+              'You are offline' : 'You are online';
+          this._networkSnackbar.open();
+        }
+      }
+
+      _succeed() {
+        console.warn('succeed!');
+      }
+
+      _error(){
+        console.warn('error!');
       }
     }
 

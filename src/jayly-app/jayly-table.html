@@ -1,5 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/basic-button/basic-button.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
 
+<link rel="import" href="../com-ele/p-table.html">
 <dom-module id="jayly-table">
   <template>
     <style>
@@ -7,9 +11,22 @@
         display: block;
       }
     </style>
-    <left-navigation>
-      
-    </left-navigation>
+    <!--
+      app-route provides the name of the category.
+    -->
+    <app-route
+    route="[[route]]"
+    pattern="/:category"
+    data="{{routeData}}"></app-route>
+
+    <h1>[[prop1]]</h1>
+
+    <p-table id="p_table">
+      <template is="dom-repeat" items="{{bodyData}}">
+        <basic-button slot="{{item}}"></basic-button>
+      </template>
+    </p-table>
+    <basic-button on-click="_tender"></basic-button>
   </template>
 
   <script>
@@ -24,8 +41,38 @@
           prop1: {
             type: String,
             value: 'jayly-table'
+          },
+          route: Object,
+          routeData: Object,
+          data: {
+            type: Object,
+            value: [
+              {one: '1', two: '2'},
+              {one: '11', two: '22'},
+              {one: '111', two: '222'},
+              {one: '1111', two: '2222'},
+            ]
+          },
+          bodyData: {
+            type: Array,
+            value: ['three1', 'three'],
           }
         };
+      }
+
+      // ready(){
+      //   super.ready();
+      //   console.log(this.root);
+      //   let trs = this.root.querySelector('.tr');
+      //   trs.attachShadow({mode: 'open'});
+      //   this.$.p_table.appendChild(trs);
+      //   console.log(trs);
+      // }
+
+      _tender() {
+        let trs = document.querySelector('.tr');
+        let table = document.querySelector('p-table');
+        table.appendChild(trs);
       }
     }
 

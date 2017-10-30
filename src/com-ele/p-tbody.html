@@ -1,7 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
-<dom-module id="jayly-home">
+<dom-module id="p-tbody">
   <template>
     <style>
       :host {
@@ -16,11 +18,10 @@
     pattern="/:category"
     data="{{routeData}}"></app-route>
     
-    <h1>[[prop1]]</h1>
-  <template is="dom-repeat" items="{{demo}}">
-    <a href="/"><slot name="{{item}}"></slot></a>
-  </template>
-  <li slot="one">ONE</li>
+        <template is="dom-repeat" items="{{bodyData}}">
+          <slot></slot>
+        </template>
+    
   </template>
 
   <script>
@@ -28,24 +29,21 @@
      * @customElement
      * @polymer
      */
-    class JaylyHome extends Polymer.Element {
-      static get is() { return 'jayly-home'; }
+    class PTbody extends Polymer.Element {
+      static get is() { return 'p-tbody'; }
       static get properties() {
         return {
           prop1: {
             type: String,
-            value: 'jayly-home'
+            value: 'p-tbody'
           },
           route: Object,
           routeData: Object,
-          demo: {
-            type: Array,
-            value: ['three1','three']
-          }
+          headData: Array
         };
       }
     }
 
-    window.customElements.define(JaylyHome.is, JaylyHome);
+    window.customElements.define(PTbody.is, PTbody);
   </script>
 </dom-module>
