@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../bower_components/iron-menu-behavior/iron-menu-behavior.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<dom-module id="p-menu">
+  <template>
+    <style>
+      :host > ::slotted(*) {
+        display: inline-block;
+      }
+      :host > ::slotted(.iron-selected) {
+        color: white;
+        background-color: var(--google-red-500);
+      }
+    </style>
+
+    <slot></slot>
+ 
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PMenu extends Polymer.mixinBehaviors(
+      [Polymer.IronMenuBehavior], Polymer.Element) {
+      static get is() { return 'p-menu'; }
+      static get observers() { return [
+        '_onSelectedItemChanged(selectedItem)',
+        '_onfocusedItem(focusedItem)'
+      ]}
+
+      _onSelectedItemChanged(selectedItem) {
+        console.warn(selectedItem);
+      }
+
+      ready() {
+        super.ready();
+      }
+
+      _onfocusedItem(focusedItem) {
+        console.warn(focusedItem, this.attrForItemTitle);
+
+        // this.focusedItem.innerHTML = 'Jayly'
+      }
+
+    }
+
+    window.customElements.define(PMenu.is, PMenu);
+  </script>
+</dom-module>

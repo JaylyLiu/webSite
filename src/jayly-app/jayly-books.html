@@ -1,25 +1,95 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-
+<link rel="import" href="../com-ele/p-menu.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-styles/demo-pages.html">
+<link rel="import" href="../../bower_components/paper-styles/default-theme.html">
+
 
 <dom-module id="jayly-books">
   <template>
-    <style>
-      :host {
+    <custom-style>
+    <style is="custom-style">
+
+      p-menu,
+      p-menubar {
+        display: inline-block;
+        width: 100%;
+      }
+      p-menu a {
         display: block;
       }
+      p-menubar a,
+      p-menu a {
+        padding: 15px 20px;
+        color: var(--primary-text-color);
+        text-decoration: none;
+      }
+      p-menubar a.iron-selected,
+      p-menu a.iron-selected {
+        color: white;
+      }
+      p-menu a[disabled],
+      p-menubar a[disabled] {
+        color: var(--google-grey-300);
+      }
+      .horizontal-section {
+        padding: 0;
+        margin-bottom: 20px;
+      }
+      .row {
+        height: 120px;
+      }
+      [hidden] {
+        display: none;
+      }
     </style>
-    <!--
-      app-route provides the name of the category.
-    -->
-    <app-route
-    route="[[route]]"
-    pattern="/:category"
-    data="{{routeData}}"></app-route>
+  </custom-style>
+</head>
+<body unresolved>
 
-    <h1>[[prop1]]</h1>
-    
+  <div class="horizontal-section-container">
+    <div>
+      <h3>p menu</h3>
+      <!-- <div class="horizontal-section"> -->
+        <!-- <p-menu id="menu"> -->
+          <!-- <a href="javascript:void(0)" role="menuitem" >Item 0</a>
+          <a href="javascript:void(0)" role="menuitem">Item 1</a>
+          <a href="javascript:void(0)" role="menuitem">Item 3</a> -->
+          <h3>Jayly</h3>
+          <p-menu role="menuitem">
+            <a href="javascript:void(0)" role="menuitem" >Item 0</a>
+            <a href="javascript:void(0)" role="menuitem">Item 1</a>
+            <a href="javascript:void(0)" role="menuitem">Item 3</a>
+          </p-menu>
+          <h3>Lisa</h3>
+          <p-menu role="menuitem">
+              <a href="javascript:void(0)" role="menuitem" >Item 0</a>
+              <a href="javascript:void(0)" role="menuitem">Item 1</a>
+              <a href="javascript:void(0)" role="menuitem">Item 3</a>
+            </p-menu>
+
+          </div>
+        <!-- </p-menu> -->
+        
+      <!-- </div> -->
+    </div>
+
+    <div>
+      <h3>Multi-select menu</h3>
+      <div class="horizontal-section">
+        <p-menu multi on-click="tt">
+          <a href="javascript:void(0)" role="menuitem">Item 0</a>
+          <a href="javascript:void(0)" role="menuitem" disabled>Item 1</a>
+          <a href="javascript:void(0)" role="menuitem" hidden>Ghost</a>
+          <a href="javascript:void(0)" role="menuitem">Item 2</a>
+          <a href="javascript:void(0)" role="menuitem">Item 3</a>
+          <a href="javascript:void(0)" role="menuitem" style="display:none">Another ghost</a>
+        </p-menu>
+      </div>
+    </div>
+
   </template>
 
   <script>
@@ -27,7 +97,7 @@
      * @customElement
      * @polymer
      */
-    class JaylyBooks extends Polymer.Element {
+    class JaylyBooks extends Polymer.Element { // selectedItem
       static get is() { return 'jayly-books'; }
       static get properties() {
         return {

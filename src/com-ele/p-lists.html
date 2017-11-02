@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<dom-module id="p-lists">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <!--
+      app-route provides the name of the category.
+    -->
+    <app-route
+    route="[[route]]"
+    pattern="/:category"
+    data="{{routeData}}"></app-route>
+    
+        <template is="dom-repeat" items="{{bodyData}}">
+          <slot></slot>
+        </template>
+    
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PTbody extends Polymer.Element {
+      static get is() { return 'p-lists'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'p-lists'
+          },
+          route: Object,
+          routeData: Object,
+          headData: Array
+        };
+      }
+    }
+
+    window.customElements.define(PTbody.is, PTbody);
+  </script>
+</dom-module>
