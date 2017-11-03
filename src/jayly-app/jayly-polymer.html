@@ -9,6 +9,8 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
 
 <link rel="import" href="jayly-view1.html">
 <link rel="import" href="jayly-view2.html">
@@ -25,22 +27,29 @@
         margin: 10px auto;
         padding: 30px ;
       }
+      .polymer{
+        padding: 40px;
+        border: 10px solid orange;
+      }
     </style>
-    <!--
-      app-route provides the name of the category.
-    -->
+    
     <app-route
     route="[[route]]"
-    
-    pattern="polymer:page"
+    pattern="/:page"
     data="{{routeData}}"></app-route>
+
+    <app-route
+      route="{{subroute}}"
+      pattern="/:id"
+      data="{{subrouteData}}">
+    </app-route>
 
     <h1>[[prop1]]</h1>
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
-        <div selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+        <div selected="[[id]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="view1" href="/polymer/view1">View One</a>
           <a name="view2" href="/polymer/view2">View Two</a>
           <a name="view3" href="/polymer/view3">View Three</a>
@@ -50,32 +59,27 @@
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
 
-        <app-header slot="header" condenses reveals effects="waterfall">
+        <app-header slot="header" condenses reveals effects="waterfall" id="header" >
           <app-toolbar>
             <paper-icon-button icon="jayly-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>jayly App</div>
           </app-toolbar>
         </app-header>
+        
+        <div class="polymer">
+          <iron-pages  role="polymer" selected="[[id]]" attr-for-selected="name" selected-attribute="visible" >
+            <jayly-view1 name="view1" route="[[subroute]]"></jayly-view1>
+            <jayly-view2 name="view2" route="[[subroute]]"></jayly-view2>
+            <jayly-view3 name="view3" route="[[subroute]]"></jayly-view3>
+          </iron-pages>
+        </div>
 
-        <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="view404"
-            role="main">
-          <jayly-view1 name="view1"></jayly-view1>
-          <jayly-view2 name="view2"></jayly-view2>
-          <jayly-view3 name="view3"></jayly-view3>
-          <jayly-view404 name="view404"></jayly-view404>
-        </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
   </template>
 
   <script>
-    /**
-     * @customElement
-     * @polymer
-     */
+
     class JaylyPolymer extends Polymer.Element {
       static get is() { return 'jayly-polymer'; }
       static get properties() {
@@ -86,11 +90,48 @@
           },
           route: Object,
           routeData: Object,
-          page: {
+          id: {
             type: String,
-            // value: 'polym'
+            reflectToAttribute: true,
+            observer: '_pageChanged'
           }
         };
+      }
+      static get observers() { return [
+        '_routePageChanged(routeData.page)'
+      ]}
+
+      _routePageChanged(id) {
+        
+        this.id = id || 'view1';
+      }
+
+      _pageChanged(id, oldId) {
+        console.warn(id, oldId)
+        if (id != null) {
+          // home route is eagerly loaded
+          if (id == 'view1') {
+            this._pageLoaded(Boolean(oldId));
+          // other routes are lazy loaded
+          } else {
+            // When a load failed, it triggered a 404 which means we need to
+            // eagerly load the 404 id definition
+            let cb = this._pageLoaded.bind(this, Boolean(oldId));
+            Polymer.importHref(
+              this.resolveUrl('jayly-' + id + '.html'),
+             cb, cb, true);
+          }
+        }
+      }
+
+      _pageLoaded(shouldResetLayout) {
+        if (shouldResetLayout) {
+          // The size of the header depends on the id (e.g. on some pages the tabs
+          // do not appear), so reset the header's layout only when switching pages.
+          Polymer.Async.timeOut.run(() => {
+            this.$.header.resetLayout();
+          }, 1);
+        }
       }
     }
 
