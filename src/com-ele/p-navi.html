@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="p-menu.html">
+
+<dom-module id="p-navi">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div class="navi-item" role="menuitem">
+        <div class="navi-item-head">Head</div>
+        <dom-if if="true">
+          <template>
+            <div class="navi-item-list">
+              <p-menu>
+                <a name="view1" href="/polymer/view1">View One</a>
+                <a name="view2" href="/polymer/view2">View Two</a>
+                <a name="view3" href="/polymer/view3">View Three</a>               
+              </p-menu>
+            </div>
+          </template>
+        </dom-if>
+      </div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PTbody extends Polymer.Element {
+      static get is() { return 'p-navi'; }
+      static get properties() {
+        return {
+          active: {
+            type: Boolean,
+            computed: ''
+          },
+        };
+      }
+    }
+
+    window.customElements.define(PTbody.is, PTbody);
+  </script>
+</dom-module>

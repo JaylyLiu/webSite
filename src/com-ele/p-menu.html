@@ -10,11 +10,11 @@
   <template>
     <style>
       :host > ::slotted(*) {
-        display: inline-block;
+        display:block;
       }
-      :host > ::slotted(.iron-selected) {
+      :host > ::slotted(.iron-selected.navi-item-head) {
         color: white;
-        background-color: var(--google-red-500);
+        background-color: var(--paper-deep-purple-a400);
       }
     </style>
 
@@ -36,7 +36,7 @@
       ]}
 
       _onSelectedItemChanged(selectedItem) {
-        console.warn(selectedItem);
+        console.warn(this.selected, 1);
       }
 
       ready() {
@@ -45,8 +45,6 @@
 
       _onfocusedItem(focusedItem) {
         console.warn(focusedItem, this.attrForItemTitle);
-
-        // this.focusedItem.innerHTML = 'Jayly'
       }
 
     }

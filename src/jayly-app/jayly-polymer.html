@@ -11,6 +11,7 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 
+<link rel="import" href="../com-ele/p-menu.html">
 
 <link rel="import" href="jayly-view1.html">
 <link rel="import" href="jayly-view2.html">
@@ -19,8 +20,13 @@
 <dom-module id="jayly-polymer">
   <template>
     <style>
-      :host {
+      :host app-header{
         display: block;
+        background-color: black;
+        color: white;
+      }
+      :host a{
+        text-decoration-line: none;
       }
       .drawer-list a{
         display: block;
@@ -31,6 +37,25 @@
         padding: 40px;
         border: 10px solid orange;
       }
+      --paper-icon-button{
+        color: black;
+      }
+      .navi-item{
+        display: block;
+        padding: 20px;
+      }
+      .navi-item-head{
+        padding: 10px 50px;
+      }
+      .iron-selected .navi-item-head{
+        background-color: var(--paper-deep-purple-a400);
+      }
+      a[class="iron-selected"]{
+        background-color: var(--google-red-500);
+      }
+      /* .navi-item-list .iron-selected a{
+        background-color: var(--google-red-500);
+      } */
     </style>
     
     <app-route
@@ -50,9 +75,55 @@
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
         <div selected="[[id]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/polymer/view1">View One</a>
+          <!-- <a name="view1" href="/polymer/view1">View One</a>
           <a name="view2" href="/polymer/view2">View Two</a>
-          <a name="view3" href="/polymer/view3">View Three</a>
+          <a name="view3" href="/polymer/view3">View Three</a> -->
+          <p-menu id="menu">
+            <div class="navi-item" role="menuitem">
+              <div class="navi-item-head">Head</div>
+              <dom-if if="true">
+                <template>
+                  <div class="navi-item-list">
+                    <p-menu>
+                      <a name="view1" href="/polymer/view1">View One</a>
+                      <a name="view2" href="/polymer/view2">View Two</a>
+                      <a name="view3" href="/polymer/view3">View Three</a>               
+                    </p-menu>
+                  </div>
+                </template>
+              </dom-if>
+
+            </div>
+            <div class="navi-item" role="menuitem">
+              <div class="navi-item-head">Head</div>
+              <dom-if if="{{_tt(selected, 0)}}">
+                <template>
+                  <div class="navi-item-list">
+                    <p-menu>
+                      <a href="javascript:void(0)" role="menuitem" >Item 0</a>
+                      <a href="javascript:void(0)" role="menuitem">Item 1</a>
+                      <a href="javascript:void(0)" role="menuitem">Item 3</a>
+                    </p-menu>
+                  </div>
+                </template>
+              </dom-if>
+            </div>
+            <div class="navi-item" role="menuitem">
+              <div class="navi-item-head">Head</div>
+              <dom-if if="{{_tt(selected, 0)}}">
+                <template>
+                  <div class="navi-item-list">
+                    <p-menu>
+                      <a href="javascript:void(0)" role="menuitem" >Item 0</a>
+                      <a href="javascript:void(0)" role="menuitem">Item 1</a>
+                      <a href="javascript:void(0)" role="menuitem">Item 3</a>                  
+                    </p-menu>
+                  </div>
+                </template>
+              </dom-if>
+            </div>
+          </p-menu>
+
         </div>
       </app-drawer>
 
@@ -61,11 +132,11 @@
 
         <app-header slot="header" condenses reveals effects="waterfall" id="header" >
           <app-toolbar>
-            <paper-icon-button icon="jayly-icons:menu" drawer-toggle></paper-icon-button>
+            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
             <div main-title>jayly App</div>
           </app-toolbar>
         </app-header>
-        
+
         <div class="polymer">
           <iron-pages  role="polymer" selected="[[id]]" attr-for-selected="name" selected-attribute="visible" >
             <jayly-view1 name="view1" route="[[subroute]]"></jayly-view1>
@@ -94,9 +165,25 @@
             type: String,
             reflectToAttribute: true,
             observer: '_pageChanged'
+          },
+          selected: {
+            type: Number,
+            observer: '_tt'
           }
         };
       }
+
+      static get observers() {
+        return [
+          '_tt(selected, num)'
+        ]
+      }
+
+      ready() {
+        super.ready();
+        this.selected = this.$.menu.selected;
+      }
+
       static get observers() { return [
         '_routePageChanged(routeData.page)'
       ]}
@@ -132,6 +219,13 @@
             this.$.header.resetLayout();
           }, 1);
         }
+      }
+
+      _tt(selected, num) {
+        if(selected === num)
+          return true;
+        else
+          return false;
       }
     }
 
